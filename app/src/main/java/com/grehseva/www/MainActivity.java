@@ -11,13 +11,21 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.grehseva.www.contants.ParseContants;
+import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -42,15 +50,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         ParseAnalytics.trackAppOpened(getIntent());
         ParseUser currentUser = ParseUser.getCurrentUser();
         if(currentUser == null) {
-            Intent intent = new Intent(this, signUpActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            navigateToSingUp();
         }else{
             Log.i(TAG, currentUser.getUsername());
         }
 
-        /// Need to add more code to
+
+
+
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -87,6 +94,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 
+    private void navigateToSingUp() {
+        Intent intent = new Intent(this, signUpActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

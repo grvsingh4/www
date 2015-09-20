@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.grehseva.www.Adapters.ChatFragment;
+import com.grehseva.www.Adapters.OrderFragment;
+
 import java.util.Locale;
 
 /**

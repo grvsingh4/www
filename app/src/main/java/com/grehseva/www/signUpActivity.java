@@ -1,27 +1,38 @@
 package com.grehseva.www;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.EntityIterator;
 import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.grehseva.www.contants.ParseContants;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import java.nio.channels.AlreadyConnectedException;
 
 public class signUpActivity extends AppCompatActivity {
+
+    public static final String TAG = signUpActivity.class.getSimpleName();
+
+    protected ParseRelation<ParseUser> mSupportRelation; //create relation with support team
+    protected ParseUser mCurrentUser;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -37,6 +48,7 @@ public class signUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        getSupportActionBar().hide();
 
         mUsername = (EditText)findViewById(R.id.usernameField);
         mUserphone = (EditText)findViewById(R.id.userPhone);
@@ -67,6 +79,18 @@ public class signUpActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseException e) {
                             if (e == null){
+                                mCurrentUser = ParseUser.getCurrentUser();
+                                ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("username");
+                                userQuery.whereEqualTo("grehseva", ParseUser.getCurrentUser());
+                                mSupportRelation = mCurrentUser.getRelation(ParseContants.KEY_SUPPORT_RELATION);
+                                mCurrentUser.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e != null){
+                                            Log.e(TAG, e.getMessage());
+                                        }
+                                    }
+                                });//relation with grehseva complete.//
                                 Intent intent = new Intent(signUpActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
